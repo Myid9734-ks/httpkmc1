@@ -1,0 +1,206 @@
+@use '../theme' as *;
+
+// Mac OS System Font
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+.mac-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-family: var(--mac-font);
+  table-layout: fixed;
+  background: var(--card-background);
+  border-radius: var(--mac-radius);
+  box-shadow: var(--mac-shadow);
+  
+  thead {
+    background: var(--card-background);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    
+    th {
+      padding: 12px 16px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--card-background);
+      backdrop-filter: blur(10px);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      
+      // 각 열의 너비 재조정
+      &:nth-child(1) { width: 12%; }  // ID
+      &:nth-child(2) { width: 12%; }  // 이름
+      &:nth-child(3) { width: 12%; }  // 공장
+      &:nth-child(4) { width: 12%; }  // 부서
+      &:nth-child(5) { width: 12%; }  // 직위
+      &:nth-child(6) { width: 15%; }  // 역할
+      &:nth-child(7) { width: 25%; }  // 상태 + 작업
+      
+      &:first-child {
+        border-top-left-radius: var(--mac-radius);
+      }
+      
+      &:last-child {
+        border-top-right-radius: var(--mac-radius);
+      }
+    }
+  }
+  
+  tbody {
+    tr {
+      transition: background-color 0.2s;
+      background-color: transparent;
+      
+      &:hover {
+        background-color: var(--hover-background);
+      }
+      
+      td {
+        padding: 12px 16px;
+        font-size: 0.875rem;
+        color: var(--text-primary);
+        border-bottom: 1px solid var(--border-color);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        
+        .action-buttons {
+          display: flex;
+          gap: 8px;
+          opacity: 0;
+          transition: opacity 0.2s;
+        }
+        
+        // 숫자 데이터의 경우 더 진한 색상 사용
+        &[data-type="number"] {
+          color: var(--text-primary);
+          font-weight: 500;
+        }
+        
+        // 텍스트 데이터의 경우 약간 투명도 적용
+        &[data-type="text"] {
+          color: var(--text-secondary);
+        }
+      }
+      
+      &:hover .action-buttons {
+        opacity: 1;
+      }
+      
+      &:last-child td {
+        border-bottom: none;
+        
+        &:first-child {
+          border-bottom-left-radius: var(--mac-radius);
+        }
+        
+        &:last-child {
+          border-bottom-right-radius: var(--mac-radius);
+        }
+      }
+    }
+  }
+}
+
+// 상태 배지 스타일
+.mac-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  gap: 6px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  
+  &.success {
+    background: rgba(46, 160, 67, 0.15);
+    color: var(--mac-success);
+    
+    .status-dot {
+      background-color: var(--mac-success);
+      box-shadow: 0 0 0 1px rgba(46, 160, 67, 0.3);
+    }
+  }
+  
+  &.warning {
+    background: rgba(232, 135, 61, 0.15);
+    color: var(--mac-warning);
+    
+    .status-dot {
+      background-color: var(--mac-warning);
+      box-shadow: 0 0 0 1px rgba(232, 135, 61, 0.3);
+    }
+  }
+  
+  &.danger {
+    background: rgba(220, 53, 69, 0.15);
+    color: var(--mac-danger);
+    
+    .status-dot {
+      background-color: var(--mac-danger);
+      box-shadow: 0 0 0 1px rgba(220, 53, 69, 0.3);
+    }
+  }
+}
+
+// 콤보박스 스타일
+.mac-select {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--mac-border);
+  border-radius: 6px;
+  height: 32px;
+  padding: 0 28px 0 12px;
+  font-size: 0.875rem;
+  color: var(--mac-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23666666' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px;
+  
+  &:hover {
+    border-color: var(--mac-primary);
+    background-color: rgba(0, 113, 227, 0.05);
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: var(--mac-primary);
+    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--mac-hover);
+  }
+  
+  &.compact {
+    height: 28px;
+    padding: 0 24px 0 8px;
+    font-size: 0.813rem;
+  }
+  
+  option {
+    background: var(--mac-bg);
+    color: var(--mac-text);
+    padding: 8px;
+  }
+}

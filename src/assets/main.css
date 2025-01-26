@@ -1,0 +1,31 @@
+@import './base.css';
+
+#app {
+  width: 100%;
+  margin: 0 auto;
+  font-weight: normal;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.glass-nav {
+  background: var(--glass-background) !important;
+  border-color: var(--border-color) !important;
+}
+
+.glass-card {
+  background: var(--card-background) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* 다크모드에서 이미지 반전 방지 */
+img {
+  filter: brightness(1) !important;
+} 

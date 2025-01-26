@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./inventory.db"
+}
+
+model EquipmentInspection {
+  id                Int       @id @default(autoincrement())
+  inspection_id     Int
+  level1_id        Int?
+  level2_id        Int?
+  level3_id        Int?
+  level4_id        Int?
+  line_name        String
+  inspection_name   String
+  inspection_standard String
+  inspection_cycle  String
+  scheduled_date    DateTime
+  execution_due_date DateTime?
+  status           String    @default("pending")
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+
+  @@map("equipment_inspections")
+}
+
+model QuickInspection {
+  id              Int      @id @default(autoincrement())
+  inspection_name String   // 점검항목 이름
+  cycle           String   // 점검주기 (예: "2week", "1month")
+  weekdays        String   // 점검요일 (JSON 문자열로 저장: [1,3,5])
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  @@map("quick_inspections")
+}
+
+model Maintenance {
+  id              Int      @id @default(autoincrement())
+  serial_no       String   // 장비 시리얼 번호
+  title           String   // 유지보수 제목
+  description     String   // 유지보수 내용
+  photos          String   // JSON 문자열로 저장된 사진 URL 배열
+  inspector       String   // 점검자 이름
+  factory         String   // 공장
+  department      String   // 부서
+  line            String   // 라인
+  status          String   @default("register") // 상태 (register, pending, in_progress, completed)
+  is_other        Boolean  @default(false) // 설비외 여부
+  scheduled_date  DateTime // 보수일
+  completed_date  DateTime? // 완료일
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  @@map("maintenances")
+}

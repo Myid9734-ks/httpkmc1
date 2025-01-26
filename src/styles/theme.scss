@@ -1,0 +1,146 @@
+// Light Mode Variables
+[data-theme="light"] {
+  // Background Colors
+  --system-background: #f5f5f7;
+  --system-secondary-background: #ffffff;
+  --system-tertiary-background: #f5f5f7;
+  
+  // Surface Colors
+  --system-card-background: rgba(255, 255, 255, 0.7);
+  --system-modal-background: rgba(255, 255, 255, 0.8);
+  --system-menu-background: #ffffff;
+  
+  // Text Colors
+  --system-text: #1d1d1f;
+  --system-secondary-text: #86868b;
+  --system-tertiary-text: #6e6e73;
+  
+  // Border Colors
+  --system-border: rgba(0, 0, 0, 0.1);
+  --system-separator: rgba(0, 0, 0, 0.1);
+  
+  // Interactive Colors
+  --system-accent: #0066cc;
+  --system-accent-hover: #0056b3;
+  --system-red: #ff3b30;
+  --system-green: #34c759;
+  --system-yellow: #ffcc00;
+  --system-orange: #ff9500;
+  
+  // Effects
+  --system-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  --system-blur: 20px;
+  
+  // Component Specific
+  --nav-background: rgba(255, 255, 255, 0.7);
+  --input-background: rgba(255, 255, 255, 0.8);
+  --button-text: #ffffff;
+}
+
+// Dark Mode Variables
+[data-theme="dark"] {
+  // Background Colors
+  --system-background: #1d1d1f;
+  --system-secondary-background: #2d2d2f;
+  --system-tertiary-background: #3d3d3f;
+  
+  // Surface Colors
+  --system-card-background: rgba(45, 45, 47, 0.7);
+  --system-modal-background: rgba(45, 45, 47, 0.8);
+  --system-menu-background: #2d2d2f;
+  
+  // Text Colors
+  --system-text: #f5f5f7;
+  --system-secondary-text: #a1a1a6;
+  --system-tertiary-text: #86868b;
+  
+  // Border Colors
+  --system-border: rgba(255, 255, 255, 0.1);
+  --system-separator: rgba(255, 255, 255, 0.1);
+  
+  // Interactive Colors
+  --system-accent: #0a84ff;
+  --system-accent-hover: #409cff;
+  --system-red: #ff453a;
+  --system-green: #32d74b;
+  --system-yellow: #ffd60a;
+  --system-orange: #ff9f0a;
+  
+  // Effects
+  --system-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  --system-blur: 20px;
+  
+  // Component Specific
+  --nav-background: rgba(45, 45, 47, 0.7);
+  --input-background: #2d2d2f;
+  --button-text: #ffffff;
+  
+  // Select specific
+  --select-background: #2d2d2f;
+  --select-option-background: #2d2d2f;
+  --select-hover-background: #3d3d3f;
+}
+
+// Common Variables
+:root {
+  // Border Radius
+  --radius-small: 4px;
+  --radius-medium: 6px;
+  --radius-large: 8px;
+  --radius-xl: 12px;
+  --radius-full: 9999px;
+  
+  // Spacing
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  
+  // Typography
+  --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  
+  // Animation
+  --transition-fast: 0.1s ease;
+  --transition-base: 0.2s ease;
+  --transition-slow: 0.3s ease;
+
+  // Light Mode
+  --select-height: 36px;
+  --select-padding: 8px 12px;
+  --select-font-size: 14px;
+  --select-border-radius: 6px;
+  --select-border-width: 1px;
+  --select-text: #333333;
+  --select-border: #666666;
+  --select-placeholder: #999999;
+  --select-hover-background: #f5f5f5;
+  --select-hover-border: #333333;
+  --select-focus-border: #3498db;
+  --select-disabled-background: #f5f5f5;
+  --select-disabled-text: #999999;
+  --select-option-background: #ffffff;
+  --select-option-text: #333333;
+  --select-option-hover: #f0f0f0;
+  --select-option-selected: #e6f3fa;
+
+  // Dark Mode
+  &[data-theme="dark"] {
+    --select-background: #2c2c2c;
+    --select-text: #ffffff;
+    --select-border: #666666;
+    --select-placeholder: #888888;
+    --select-hover-background: #3c3c3c;
+    --select-hover-border: #888888;
+    --select-focus-border: #3498db;
+    --select-disabled-background: #3c3c3c;
+    --select-disabled-text: #888888;
+    --select-option-background: #2c2c2c;
+    --select-option-text: #ffffff;
+    --select-option-hover: #3c3c3c;
+    --select-option-selected: #1a4a6e;
+  }
+} 

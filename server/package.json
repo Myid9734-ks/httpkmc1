@@ -1,0 +1,35 @@
+{
+  "name": "inventory-server",
+  "version": "1.0.0",
+  "description": "Inventory Management System Server",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "migrate": "prisma migrate dev --schema=../prisma/schema.prisma --name update_equipment_inspections"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.2.1",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "exceljs": "^4.4.0",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "node-cron": "^3.0.3",
+    "node-schedule": "^2.1.1",
+    "node-xlsx": "^0.24.0",
+    "prisma": "^6.2.1",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7",
+    "vue-toastification": "^2.0.0-rc.5",
+    "xlsx": "^0.18.5",
+    "xlsx-populate": "^1.21.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  },
+  "author": "",
+  "license": "ISC"
+}

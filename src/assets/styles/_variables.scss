@@ -1,0 +1,53 @@
+@forward 'sass:color';
+
+// Colors
+$color-primary: #3498db;
+$color-text: #2c3e50;
+$color-text-light: #666;
+$color-background: #f6f6f6;
+
+// MAC OS Colors & Effects
+$system-background: linear-gradient(145deg, #ffffff 0%, #f5f7fa 45%, #e9ecef 100%);
+$system-blue: #0066cc;
+$system-text: #1d1d1f;
+$system-secondary: #86868b;
+
+// Glass effect - MAC OS style
+$glass-background: rgba(255, 255, 255, 0.75);
+$glass-border: rgba(209, 213, 219, 0.3);
+
+// Mixins
+@mixin glass-effect {
+  background: $glass-background;
+  backdrop-filter: blur(10px) saturate(160%) brightness(1.1);
+  -webkit-backdrop-filter: blur(10px) saturate(160%) brightness(1.1);
+  border: 1px solid $glass-border;
+  border-radius: 12px;
+  box-shadow: 
+    0 1px 0 0 rgba(255, 255, 255, 0.8) inset,
+    0 0 0 1px rgba(0, 0, 0, 0.02),
+    0 2px 4px 0 rgba(0, 0, 0, 0.02);
+}
+
+@mixin mac-button {
+  padding: 4px 12px;
+  font-size: 13px;
+  color: $system-blue;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  transition: all 0.2s;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(0, 0, 0, 0.15);
+  }
+}
+
+// Active state
+@mixin glass-active {
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+} 

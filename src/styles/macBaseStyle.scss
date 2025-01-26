@@ -1,0 +1,142 @@
+// macOS 스타일 변수
+:root {
+  // Colors
+  --mac-bg: var(--background-primary);
+  --mac-card-bg: var(--card-background);
+  --mac-text: var(--text-primary);
+  --mac-text-secondary: var(--text-secondary);
+  --mac-text-title: var(--text-primary);
+  --mac-border: var(--border-color);
+  --mac-hover: var(--hover-background);
+  --mac-primary: var(--system-accent);
+  --mac-success: #059669;
+  --mac-warning: #d97706;
+  --mac-danger: #dc2626;
+  
+  // Shadows
+  --mac-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --mac-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  --mac-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.2);
+  
+  // Border radius
+  --mac-radius-sm: 4px;
+  --mac-radius: 8px;
+  --mac-radius-lg: 12px;
+  
+  // Font
+  --mac-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+// Glass effect mixin
+@mixin glass-effect {
+  background: rgba(141, 142, 143, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(122, 123, 124, 0.5);
+  box-shadow: var(--mac-shadow);
+}
+
+// Button styles
+.mac-button {
+  padding: 8px 16px;
+  border-radius: var(--mac-radius);
+  font-family: var(--mac-font);
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: pointer;
+  
+  &.primary {
+    background: var(--mac-primary);
+    color: white;
+    border: none;
+    
+    &:hover {
+      filter: brightness(0.95);
+    }
+  }
+  
+  &.secondary {
+    background: var(--mac-hover);
+    color: var(--mac-text);
+    border: 1px solid var(--mac-border);
+    
+    &:hover {
+      filter: brightness(0.95);
+    }
+  }
+  
+  &.danger {
+    background: var(--mac-danger);
+    color: white;
+    border: none;
+    
+    &:hover {
+      filter: brightness(0.95);
+    }
+  }
+}
+
+// Input styles
+.mac-input {
+  padding: 8px 12px;
+  border-radius: var(--mac-radius);
+  border: 1px solid var(--mac-border);
+  font-family: var(--mac-font);
+  background: var(--input-background);
+  color: var(--mac-text);
+  transition: all 0.2s;
+  
+  &:focus {
+    outline: none;
+    border-color: var(--mac-primary);
+    box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.2);
+  }
+}
+
+// Badge styles
+.mac-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: var(--mac-radius-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  
+  &.success {
+    background: rgba(46, 160, 67, 0.1);
+    color: var(--mac-success);
+  }
+  
+  &.warning {
+    background: rgba(232, 135, 61, 0.1);
+    color: var(--mac-warning);
+  }
+  
+  &.danger {
+    background: rgba(220, 53, 69, 0.1);
+    color: var(--mac-danger);
+  }
+  
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 6px;
+  }
+}
+
+// Card styles
+.mac-card {
+  background: var(--mac-card-bg);
+  border-radius: var(--mac-radius);
+  box-shadow: var(--mac-shadow);
+  color: var(--mac-text);
+}
+
+// Title styles
+.page-title {
+  color: var(--mac-text-title);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,71 @@
+@use 'sass:color';
+
+// macOS 스타일 변수
+$primary-blue: #007AFF;
+$background-start: #f5f7fa;
+$background-end: #c3cfe2;
+$glass-bg: rgba(255, 255, 255, 0.65);
+$glass-border: rgba(255, 255, 255, 0.4);
+$glass-shadow: rgba(31, 38, 135, 0.07);
+
+// 기본 글래스 효과
+@mixin glass-morphism {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px) saturate(1.8);
+  -webkit-backdrop-filter: blur(10px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  border-radius: 20px;
+}
+
+// 호버 효과
+@mixin glass-hover {
+  &:hover {
+    background: rgba(255, 255, 255, 0.8);
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+  }
+}
+
+// 기본 배경 스타일
+.home {
+  background: linear-gradient(135deg, $background-start 0%, $background-end 100%);
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+// 기본 글래스 클래스
+.glass {
+  @include glass-morphism;
+}
+
+// 카드 스타일
+.glass-card {
+  @include glass-morphism;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    @include glass-hover;
+  }
+}
+
+// 네비게이션 스타일
+.glass-nav {
+  @include glass-morphism;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 4rem;
+  z-index: 1000;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  border-radius: 0;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+} 
