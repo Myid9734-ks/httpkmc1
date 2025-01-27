@@ -149,7 +149,72 @@ router.patch('/:id', async (req, res) => {
   }
 });
 
-// 점검실행 API
+// 평일 체크 함수 추가
+const isWeekday = (date) => {
+  const day = date.getDay();
+  return day !== 0 && day !== 6;  // 0은 일요일, 6은 토요일
+};
+
+// 다음 예정일 계산 함수
+const calculateNextScheduledDate = (baseDate, cycle) => {
+  // 한글 주기를 영문으로 변환
+  const koreanToEnglish = {
+    '일': 'day',
+    '주': 'week',
+    '개월': 'month',
+    '년': 'year'
+  };
+
+  // 숫자와 단위 분리 (예: "12개월" -> ["12", "개월"])
+  const cycleMatch = cycle.match(/(\d+)([가-힣]+)/);
+  if (!cycleMatch) return null;
+
+  const [, number, koreanUnit] = cycleMatch;
+  const unit = koreanToEnglish[koreanUnit];
+  if (!unit) return null;
+
+  const nextDate = new Date(baseDate);
+  
+  // 기본 다음 예정일 계산
+  switch(unit) {
+    case 'day':
+      nextDate.setDate(nextDate.getDate() + parseInt(number));
+      break;
+    case 'week':
+      nextDate.setDate(nextDate.getDate() + (parseInt(number) * 7));
+      break;
+    case 'month':
+      nextDate.setMonth(nextDate.getMonth() + parseInt(number));
+      break;
+    case 'year':
+      nextDate.setFullYear(nextDate.getFullYear() + parseInt(number));
+      break;
+    default:
+      return null;
+  }
+
+  // ±5일 범위 내에서 평일 찾기
+  const minDate = new Date(nextDate);
+  const maxDate = new Date(nextDate);
+  minDate.setDate(minDate.getDate() - 5);
+  maxDate.setDate(maxDate.getDate() + 5);
+
+  // 범위 내 평일 수집
+  const weekdays = [];
+  let checkDate = new Date(minDate);
+  while (checkDate <= maxDate) {
+    if (isWeekday(checkDate)) {
+      weekdays.push(new Date(checkDate));
+    }
+    checkDate.setDate(checkDate.getDate() + 1);
+  }
+
+  // 랜덤하게 평일 선택
+  const randomIndex = Math.floor(Math.random() * weekdays.length);
+  return weekdays[randomIndex];
+};
+
+// 점검실행 API 수정
 router.post('/complete/:id', async (req, res) => {
   const { id } = req.params;
   const { inspector, checklist_results, photos, notes } = req.body;
@@ -169,8 +234,6 @@ router.post('/complete/:id', async (req, res) => {
     if (!inspection) {
       throw new Error('점검 데이터를 찾을 수 없습니다.');
     }
-
-    console.log('- 원본 점검 데이터 조회 완료');
 
     // 2. 완료된 점검 테이블에 데이터 저장
     const result = await db.run(`
@@ -208,15 +271,22 @@ router.post('/complete/:id', async (req, res) => {
       notes
     ]);
 
-    console.log('- 원본 점검 데이터 업데이트 완료');
+    // 3. 다음 예정일 계산 및 원본 데이터 업데이트
+    const nextScheduledDate = calculateNextScheduledDate(
+      inspection.scheduled_date,
+      inspection.inspection_cycle
+    );
 
-    // 알림 생성
-    console.log('알림 생성 시작:', {
-      type: 'EQUIPMENT_CHECK',
-      message: `${inspection.inspection_name} 점검이 완료되었습니다.`,
-      reference_id: inspection.id
-    });
+    if (nextScheduledDate) {
+      await db.run(`
+        UPDATE equipment_inspections 
+        SET scheduled_date = ?,
+            execution_due_date = NULL
+        WHERE id = ?
+      `, [nextScheduledDate.toISOString().split('T')[0], id]);
+    }
 
+    // 4. 알림 생성
     await db.run(
       `INSERT INTO notifications (type, message, reference_id, reference_type)
        VALUES (?, ?, ?, ?)`,
@@ -227,66 +297,19 @@ router.post('/complete/:id', async (req, res) => {
         'equipment_inspections'
       ]
     );
-
-    console.log('알림 생성 완료');
-
-    // notifications 테이블 조회
-    const notifications = await db.all('SELECT * FROM notifications ORDER BY created_at DESC LIMIT 5');
-    console.log('최근 알림 목록:', notifications);
 
     // 트랜잭션 커밋
     await db.run('COMMIT');
 
     res.json({ 
       message: '점검이 완료되었습니다.',
-      completedInspectionId: result.lastID
+      completedInspectionId: result.lastID,
+      nextScheduledDate: nextScheduledDate
     });
   } catch (error) {
     // 오류 발생 시 롤백
     await db.run('ROLLBACK');
     console.error('[ERROR] 점검완료 처리 중 오류:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// 점검 완료 처리
-router.post('/:id/complete', async (req, res) => {
-  const { id } = req.params;
-  const { inspector, inspection_date, check_results, notes } = req.body;
-  const db = await getDb();
-  
-  try {
-    // 점검 정보 조회
-    const inspection = await db.get('SELECT * FROM equipment_inspections WHERE id = ?', [id]);
-    if (!inspection) {
-      return res.status(404).json({ error: '점검 계획을 찾을 수 없습니다.' });
-    }
-
-    // 완료 처리
-    await db.run(
-      `UPDATE equipment_inspections 
-       SET status = ?, inspector = ?, inspection_date = ?, 
-           check_results = ?, notes = ?, 
-           updated_at = datetime("now", "localtime") 
-       WHERE id = ?`,
-      ['completed', inspector, inspection_date, JSON.stringify(check_results), notes, id]
-    );
-
-    // 알림 생성
-    await db.run(
-      `INSERT INTO notifications (type, message, reference_id, reference_type)
-       VALUES (?, ?, ?, ?)`,
-      [
-        'EQUIPMENT_CHECK',
-        `${inspection.inspection_name} 점검이 완료되었습니다.`,
-        inspection.id,
-        'equipment_inspections'
-      ]
-    );
-
-    res.json({ success: true });
-  } catch (error) {
-    console.error('점검 완료 처리 실패:', error);
     res.status(500).json({ error: error.message });
   }
 });
