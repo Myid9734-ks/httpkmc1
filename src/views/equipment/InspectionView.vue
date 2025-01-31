@@ -58,7 +58,7 @@
               <span class="button-text">완료목록</span>
             </button>
           </div>
-          <button class="mac-button primary" @click="generateInspections">
+          <button class="mac-button primary" @click="generateInspections" :disabled="!isSystemAdmin">
             <span class="button-icon">+</span>
             <span class="button-text">계획 생성</span>
           </button>
@@ -542,7 +542,11 @@
                 <span class="cycle">{{ item.cycle }}</span>
                 <span class="weekdays">{{ formatWeekdays(item.weekdays) }}</span>
               </div>
-              <button class="delete-button" @click="deleteQuickInspection(item.id)">
+              <button 
+                v-if="isSystemAdmin"
+                class="delete-button" 
+                @click="deleteQuickInspection(item.id)"
+              >
                 <font-awesome-icon :icon="['fas', 'trash']" />
               </button>
             </div>
@@ -1081,6 +1085,13 @@ const createQuickInspection = async (requestData) => {
     console.error('빠른 점검 생성 실패:', error)
   }
 }
+
+// 시스템 관리자 확인
+const isSystemAdmin = computed(() => {
+  console.log('Current user:', authStore.user)
+  console.log('Current user role:', authStore.user?.role)
+  return authStore.user?.role?.toLowerCase() === 'system_admin'
+})
 </script>
 
 <style lang="scss" scoped>
@@ -1660,14 +1671,16 @@ thead {
 .mac-button {
   &.primary {
     &:disabled {
-      background-color: #e5e7eb;
-      color: #9ca3af;
-      border-color: #d1d5db;
+      background-color: var(--mac-disabled-background);
+      color: var(--mac-disabled-text);
+      border-color: var(--mac-disabled-border);
+      cursor: not-allowed;
+      opacity: 0.7;
       
       &:hover {
-        background-color: #e5e7eb;
-        color: #9ca3af;
-        border-color: #d1d5db;
+        background-color: var(--mac-disabled-background);
+        color: var(--mac-disabled-text);
+        border-color: var(--mac-disabled-border);
       }
     }
   }
