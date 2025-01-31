@@ -3,7 +3,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useNotificationStore } from '@/stores/notification'
 
 const client = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
+  baseURL: import.meta.env.VITE_API_URL || 'http://web.ikmc1.duckdns.org:3001',
   headers: {
     'Content-Type': 'application/json'
   }

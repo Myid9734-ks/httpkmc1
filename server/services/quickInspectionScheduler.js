@@ -34,7 +34,7 @@ async function scheduleQuickInspections() {
 담당자님 점검을 진행해주세요.`
           
           try {
-            await sendTelegramMessage(message)
+            await sendTelegramMessage(message, 'group')
             console.log(`간단점검 알림 전송 완료: ${inspection.inspection_name}`)
           } catch (error) {
             console.error('텔레그램 메시지 전송 실패:', error)

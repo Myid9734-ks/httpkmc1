@@ -63,3 +63,12 @@ model Maintenance {
 
   @@map("maintenances")
 }
+
+model tool_notifications {
+  id        Int      @id @default(autoincrement())
+  tool_id   Int
+  notified_at DateTime @default(now())
+  resolved  Boolean  @default(false)
+  
+  @@index([tool_id])
+}

@@ -555,9 +555,11 @@ const addChecklistItem = async () => {
   
   try {
     const response = await client.post(`/inspections/${selectedItem.value.id}/checklist`, {
-      item: newChecklistItem.value
+      content: newChecklistItem.value.content,
+      required: newChecklistItem.value.required
     })
-    selectedItem.value.checklist = response.data
+    // 새 항목을 기존 체크리스트에 추가
+    selectedItem.value.checklist = [...selectedItem.value.checklist, response.data]
     newChecklistItem.value = { content: '', required: false }
   } catch (error) {
     console.error('체크리스트 항목 추가 실패:', error)
@@ -575,7 +577,10 @@ const saveChecklistEdit = async () => {
   try {
     const response = await client.put(
       `/inspections/${selectedItem.value.id}/checklist/${editingChecklistItem.value.id}`,
-      { item: editingChecklistItem.value.content }
+      { 
+        content: editingChecklistItem.value.content,
+        required: editingChecklistItem.value.required
+      }
     )
 
     const index = selectedItem.value.checklist.findIndex(
@@ -1092,6 +1097,43 @@ const addNewItem = async () => {
 .info-row {
   .edit-field {
     flex: 1;
+  }
+}
+
+.mac-table {
+  th, td {
+    white-space: normal;
+    word-break: break-word;
+    min-width: 150px;
+    max-width: 300px;
+    
+    &:first-child {  /* 점검코드 컬럼 */
+      min-width: 80px;
+      max-width: 100px;
+    }
+    
+    &:nth-child(4) {  /* 주기 컬럼 */
+      min-width: 60px;
+      max-width: 80px;
+      text-align: center;
+    }
+    
+    &:nth-child(5) {  /* 중요도 컬럼 */
+      min-width: 60px;
+      max-width: 80px;
+      text-align: center;
+    }
+    
+    &:nth-child(6) {  /* 상태 컬럼 */
+      min-width: 60px;
+      max-width: 80px;
+      text-align: center;
+    }
+    
+    &:last-child {  /* 작업 컬럼 */
+      min-width: 200px;
+      white-space: nowrap;
+    }
   }
 }
 </style> 

@@ -113,6 +113,18 @@ onUnmounted(() => {
 </script>
 
 <style>
+/* 전역 스크롤바 스타일 */
+html, body {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* Chrome, Safari and Opera */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
 #app {
   width: 100%;
   min-height: 100vh;
@@ -128,5 +140,12 @@ onUnmounted(() => {
   padding: 20px;
   padding-top: 80px; /* NavBar 높이 + 여유공간 */
   overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* Chrome, Safari and Opera */
+.main-content::-webkit-scrollbar {
+  display: none;
 }
 </style> 

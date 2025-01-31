@@ -253,6 +253,7 @@
                 <div class="item-number">{{ index + 1 }}</div>
                 <div class="item-content">
                   <span class="content">{{ item.content }}</span>
+                  <span class="required-mark">*</span>
                 </div>
               </div>
               <div class="check-actions">
@@ -361,6 +362,7 @@
                 <div class="item-number">{{ index + 1 }}</div>
                 <div class="item-content">
                   <span class="content">{{ item.content }}</span>
+                  <span class="required-mark">*</span>
                 </div>
               </div>
               <div class="check-actions">
@@ -816,7 +818,8 @@ const removePhoto = (index: number) => {
 const startInspection = (inspection: EquipmentInspection) => {
   selectedInspection.value = inspection
   inspectorName.value = authStore.user?.name || ''
-  checkResults.value = new Array(inspection.checklist.length).fill(null)
+  // 모든 체크리스트 항목을 기본적으로 부적합으로 설정
+  checkResults.value = new Array(inspection.checklist.length).fill(false)
   photos.value = new Array(inspection.checklist.length).fill('')
   inspectionNotes.value = ''
   showStartModal.value = true
@@ -1081,6 +1084,36 @@ const createQuickInspection = async (requestData) => {
 </script>
 
 <style lang="scss" scoped>
+:root {
+  // 라이트 모드
+  --icon-button-bg: #f5f7fa;
+  --icon-button-border: #e4e7ed;
+  --icon-button-color: #606266;
+  --icon-button-hover-bg: #ecf5ff;
+  --icon-button-hover-border: #c6e2ff;
+  --icon-button-hover-color: #409eff;
+  --select-background: #ffffff;
+  --select-text: #333333;
+  --select-option-bg: #0066FF;
+  --select-option-text: #ffffff;
+  --select-hover-bg: #0052cc;
+}
+
+:root[data-theme="dark"] {
+  // 다크 모드
+  --icon-button-bg: #363636;
+  --icon-button-border: #4a4a4a;
+  --icon-button-color: #c0c4cc;
+  --icon-button-hover-bg: #404854;
+  --icon-button-hover-border: #4c5664;
+  --icon-button-hover-color: #79bbff;
+  --select-background: #2d2d2d;
+  --select-text: #e0e0e0;
+  --select-option-bg: #0066FF;
+  --select-option-text: #ffffff;
+  --select-hover-bg: #0052cc;
+}
+
 .inspection-view {
   padding: 1rem;
   max-width: 100%;
@@ -1288,12 +1321,20 @@ const createQuickInspection = async (requestData) => {
   width: 90%;
   max-width: 600px;
   max-height: 80vh;
-  overflow-y: auto;
   margin: 2rem auto;
   padding: 0;
   border-radius: 12px;
   background: var(--mac-background);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 .modal-header {
@@ -1303,29 +1344,20 @@ const createQuickInspection = async (requestData) => {
   padding: 1.5rem;
   border-bottom: 1px solid var(--mac-border-color);
   background: var(--mac-background);
-
-  .header-title {
-    h2 {
-      margin: 0;
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--mac-text);
-    }
-
-    .inspection-code {
-      font-size: 0.875rem;
-      color: var(--mac-text-secondary);
-      padding: 0.25rem 0.5rem;
-      background: var(--mac-surface);
-      border-radius: var(--mac-radius-sm);
-    }
-  }
+  flex-shrink: 0;
 }
 
 .modal-body {
   padding: 1rem;
-  max-height: calc(80vh - 120px);
   overflow-y: auto;
+  flex: 1;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 .info-group {
@@ -1430,6 +1462,11 @@ const createQuickInspection = async (requestData) => {
       color: var(--mac-text);
       line-height: 1.5;
     }
+
+    .required-mark {
+      color: var(--mac-error);
+      margin-left: 0.25rem;
+    }
   }
 
   .check-actions {
@@ -1445,42 +1482,16 @@ const createQuickInspection = async (requestData) => {
   .check-buttons {
     display: flex;
     gap: 0.5rem;
-  }
+    position: relative;
 
-  .check-button {
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    padding: 0.375rem 0.75rem;
-    border: 1px solid var(--mac-border-color);
-    border-radius: var(--mac-radius-sm);
-    background: var(--mac-background);
-    color: var(--mac-text);
-    font-size: 0.75rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-
-    &:hover {
-      border-color: var(--mac-primary);
-    }
-
-    &.active {
-      background: var(--mac-primary);
-      border-color: var(--mac-primary);
-      color: var(--mac-text-on-primary);
-    }
-
-    &.danger {
-      &:hover {
-        border-color: var(--mac-error);
-      }
-
-      &.active {
-        background-color: #dc2626 !important;
-        border-color: #dc2626 !important;
-        color: white !important;
-      }
+    &::after {
+      content: '필수 선택';
+      position: absolute;
+      bottom: -1.25rem;
+      right: 0;
+      font-size: 0.75rem;
+      color: var(--mac-error);
+      opacity: 0.8;
     }
   }
 }
@@ -1673,56 +1684,55 @@ thead {
       flex-shrink: 0;
     }
 
-    .mac-input {
+    .cycle-input {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
       flex-grow: 1;
-    }
-  }
 
-  .cycle-input {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-grow: 1;
-
-    .cycle-number {
-      width: 80px;
-      flex-shrink: 0;
-    }
-
-    .cycle-unit {
-      width: 100px;
-      flex-shrink: 0;
-    }
-
-    .cycle-text {
-      color: var(--mac-text);
-      font-size: 0.875rem;
-    }
-  }
-
-  .weekday-buttons {
-    display: flex;
-    gap: 0.25rem;
-    flex-wrap: wrap;
-
-    .weekday-button {
-      padding: 0.375rem 0.75rem;
-      border: 1px solid var(--mac-border-color);
-      border-radius: var(--mac-radius-sm);
-      background: var(--mac-background);
-      color: var(--mac-text);
-      font-size: 0.875rem;
-      cursor: pointer;
-      transition: all 0.2s;
-
-      &:hover {
-        border-color: var(--mac-primary);
+      .cycle-number {
+        width: 80px;
+        flex-shrink: 0;
       }
 
-      &.active {
-        background: var(--mac-primary);
-        border-color: var(--mac-primary);
-        color: var(--mac-text-on-primary);
+      select.cycle-unit {
+        width: 100px;
+        flex-shrink: 0;
+        height: 38px;
+        padding: 0 32px 0 12px;
+        border: 1px solid var(--mac-border-color);
+        border-radius: var(--mac-radius);
+        background-color: #2d2d2d;
+        color: #e0e0e0;
+        cursor: pointer;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 8px center;
+        background-size: 16px;
+        overflow: hidden;
+        box-sizing: border-box;
+        
+        option {
+          background-color: #2d2d2d;
+          color: #e0e0e0;
+          padding: 8px 12px;
+
+          &:hover {
+            background-color: #363636;
+          }
+        }
+        
+        &:focus {
+          outline: none;
+          border-color: var(--mac-primary);
+        }
+
+        &:hover {
+          border-color: var(--mac-primary);
+        }
       }
     }
   }
@@ -1822,6 +1832,33 @@ thead {
     
     &:hover {
       color: var(--mac-error-hover);
+    }
+  }
+}
+
+.weekday-buttons {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+
+  .weekday-button {
+    padding: 0.375rem 0.75rem;
+    border: 1px solid var(--mac-border-color);
+    border-radius: var(--mac-radius-sm);
+    background: var(--mac-background);
+    color: var(--mac-text);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      border-color: var(--mac-primary);
+    }
+
+    &.active {
+      background: var(--mac-primary);
+      border-color: var(--mac-primary);
+      color: var(--mac-text-on-primary);
     }
   }
 }

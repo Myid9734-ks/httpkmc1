@@ -180,7 +180,7 @@
     </div>
 
     <!-- 상세 정보 모달 -->
-    <div v-if="selectedTool" class="modal-overlay" @click.self="closeModal">
+    <div v-if="selectedTool" class="modal-overlay">
       <div class="modal-content glass-card">
         <div class="modal-header">
           <h2>공구 상세 정보</h2>
@@ -1050,15 +1050,22 @@ const handleDepartmentChange = () => {
     min-width: 60px;
     height: 32px;
     font-size: 13px;
-    appearance: none;  // 기본 select 스타일 제거
+    appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 6px center;
     padding-right: 24px;
-    background-color: var(--modal-bg);
+    background-color: #2d2d2d;
+    color: #e0e0e0;
     border: 1px solid var(--border-color);
     border-radius: 6px;
     cursor: pointer;
+
+    option {
+      background-color: #2d2d2d;
+      color: #e0e0e0;
+      padding: 8px 12px;
+    }
 
     &:focus {
       border-color: var(--accent-color);
