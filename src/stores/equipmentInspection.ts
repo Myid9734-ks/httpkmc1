@@ -170,9 +170,10 @@ export const useEquipmentInspectionStore = defineStore('equipmentInspection', ()
       // 각 점검항목과 라인의 조합으로 점검 계획 생성
       for (const inspection of activeInspections) {
         for (const line of processedLines) {
-          // 예정일 생성 (현재 연도 전체 범위)
-          const currentYear = new Date().getFullYear()
-          const startDate = new Date(currentYear, 0, 1)  // 현재 연도 1월 1일
+          // 시작일은 현재 날짜로 설정
+          const today = new Date()
+          const currentYear = today.getFullYear()
+          const startDate = today  // 현재 날짜부터 시작
           const endDate = new Date(currentYear, 11, 31)  // 현재 연도 12월 31일
           
           console.log('=== 날짜 계산 로그 ===')
@@ -184,7 +185,7 @@ export const useEquipmentInspectionStore = defineStore('equipmentInspection', ()
           )
           console.log('생성된 날짜:', scheduledDate.toISOString())
           
-          // 주말 제외
+          // 주말 제외 (다음 평일로 이동)
           while (scheduledDate.getDay() === 0 || scheduledDate.getDay() === 6) {
             scheduledDate.setDate(scheduledDate.getDate() + 1)
           }
