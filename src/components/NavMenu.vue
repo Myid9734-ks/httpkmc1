@@ -9,7 +9,7 @@
       <div class="dropdown-trigger" @click="toggleDropdown"
            :class="{ 'active': isDropdownOpen }">
         <font-awesome-icon icon="cog" />
-        <span>기본정보</span>
+        <span>기본</span>
         <font-awesome-icon 
           icon="chevron-down" 
           class="dropdown-arrow"
@@ -44,7 +44,7 @@
       <div class="dropdown-trigger" @click="toggleProduction"
            :class="{ 'active': isProductionOpen }">
         <font-awesome-icon icon="industry" />
-        <span>생산관리</span>
+        <span>생산</span>
         <font-awesome-icon 
           icon="chevron-down" 
           class="dropdown-arrow"
@@ -75,7 +75,7 @@
       <div class="dropdown-trigger" @click="toggleDocuments"
            :class="{ 'active': isDocumentsOpen }">
         <font-awesome-icon icon="file-alt" />
-        <span>생산문서</span>
+        <span>문서</span>
         <font-awesome-icon 
           icon="chevron-down" 
           class="dropdown-arrow"
@@ -106,7 +106,7 @@
       <div class="dropdown-trigger" @click="toggleEquipmentMgmt"
            :class="{ 'active': isEquipmentMgmtOpen }">
         <font-awesome-icon icon="industry" />
-        <span>설비관리</span>
+        <span>설비</span>
         <font-awesome-icon 
           icon="chevron-down" 
           class="dropdown-arrow"
@@ -137,7 +137,7 @@
       <div class="dropdown-trigger" @click="toggleToolMgmt"
            :class="{ 'active': isToolMgmtOpen }">
         <font-awesome-icon icon="tools" />
-        <span>공구관리</span>
+        <span>공구</span>
         <font-awesome-icon 
           icon="chevron-down" 
           class="dropdown-arrow"
@@ -164,7 +164,7 @@
       <div class="dropdown-trigger" @click="toggleHandover"
            :class="{ 'active': isHandoverOpen }">
         <font-awesome-icon icon="handshake" />
-        <span>인수인계</span>
+        <span>교대</span>
         <font-awesome-icon 
           icon="chevron-down" 
           class="dropdown-arrow"
@@ -277,50 +277,86 @@ watch(
   }
 )
 
-const toggleDropdown = () => {
-  isDropdownOpen.value = !isDropdownOpen.value
-  isHandoverOpen.value = false
-  isProductionOpen.value = false
-  isDocumentsOpen.value = false
-}
+const updateDropdownPosition = (event: MouseEvent, dropdownMenu: HTMLElement) => {
+  const trigger = event.currentTarget as HTMLElement;
+  const rect = trigger.getBoundingClientRect();
+  dropdownMenu.style.left = `${rect.left}px`;
+  
+  // 화면 오른쪽 끝에서 넘치는지 확인
+  const dropdownRight = rect.left + dropdownMenu.offsetWidth;
+  if (dropdownRight > window.innerWidth) {
+    dropdownMenu.style.left = `${window.innerWidth - dropdownMenu.offsetWidth - 20}px`;
+  }
+};
 
-const toggleHandover = () => {
-  isHandoverOpen.value = !isHandoverOpen.value
-  isDropdownOpen.value = false
-  isProductionOpen.value = false
-  isDocumentsOpen.value = false
-}
+const toggleDropdown = (event: MouseEvent) => {
+  isDropdownOpen.value = !isDropdownOpen.value;
+  if (isDropdownOpen.value && dropdownRef.value) {
+    const menu = dropdownRef.value.querySelector('.dropdown-menu') as HTMLElement;
+    if (menu) updateDropdownPosition(event, menu);
+  }
+  isHandoverOpen.value = false;
+  isProductionOpen.value = false;
+  isDocumentsOpen.value = false;
+};
 
-const toggleProduction = () => {
-  isProductionOpen.value = !isProductionOpen.value
-  isDropdownOpen.value = false
-  isHandoverOpen.value = false
-  isDocumentsOpen.value = false
-}
+const toggleHandover = (event: MouseEvent) => {
+  isHandoverOpen.value = !isHandoverOpen.value;
+  if (isHandoverOpen.value && handoverRef.value) {
+    const menu = handoverRef.value.querySelector('.dropdown-menu') as HTMLElement;
+    if (menu) updateDropdownPosition(event, menu);
+  }
+  isDropdownOpen.value = false;
+  isProductionOpen.value = false;
+  isDocumentsOpen.value = false;
+};
 
-const toggleDocuments = () => {
-  isDocumentsOpen.value = !isDocumentsOpen.value
-  isDropdownOpen.value = false
-  isHandoverOpen.value = false
-  isProductionOpen.value = false
-}
+const toggleProduction = (event: MouseEvent) => {
+  isProductionOpen.value = !isProductionOpen.value;
+  if (isProductionOpen.value && productionRef.value) {
+    const menu = productionRef.value.querySelector('.dropdown-menu') as HTMLElement;
+    if (menu) updateDropdownPosition(event, menu);
+  }
+  isDropdownOpen.value = false;
+  isHandoverOpen.value = false;
+  isDocumentsOpen.value = false;
+};
 
-const toggleEquipmentMgmt = () => {
-  isEquipmentMgmtOpen.value = !isEquipmentMgmtOpen.value
-  isDropdownOpen.value = false
-  isHandoverOpen.value = false
-  isProductionOpen.value = false
-  isDocumentsOpen.value = false
-}
+const toggleDocuments = (event: MouseEvent) => {
+  isDocumentsOpen.value = !isDocumentsOpen.value;
+  if (isDocumentsOpen.value && documentsRef.value) {
+    const menu = documentsRef.value.querySelector('.dropdown-menu') as HTMLElement;
+    if (menu) updateDropdownPosition(event, menu);
+  }
+  isDropdownOpen.value = false;
+  isHandoverOpen.value = false;
+  isProductionOpen.value = false;
+};
 
-const toggleToolMgmt = () => {
-  isToolMgmtOpen.value = !isToolMgmtOpen.value
-  isDropdownOpen.value = false
-  isHandoverOpen.value = false
-  isProductionOpen.value = false
-  isDocumentsOpen.value = false
-  isEquipmentMgmtOpen.value = false
-}
+const toggleEquipmentMgmt = (event: MouseEvent) => {
+  isEquipmentMgmtOpen.value = !isEquipmentMgmtOpen.value;
+  if (isEquipmentMgmtOpen.value && equipmentMgmtRef.value) {
+    const menu = equipmentMgmtRef.value.querySelector('.dropdown-menu') as HTMLElement;
+    if (menu) updateDropdownPosition(event, menu);
+  }
+  isDropdownOpen.value = false;
+  isHandoverOpen.value = false;
+  isProductionOpen.value = false;
+  isDocumentsOpen.value = false;
+};
+
+const toggleToolMgmt = (event: MouseEvent) => {
+  isToolMgmtOpen.value = !isToolMgmtOpen.value;
+  if (isToolMgmtOpen.value && toolMgmtRef.value) {
+    const menu = toolMgmtRef.value.querySelector('.dropdown-menu') as HTMLElement;
+    if (menu) updateDropdownPosition(event, menu);
+  }
+  isDropdownOpen.value = false;
+  isHandoverOpen.value = false;
+  isProductionOpen.value = false;
+  isDocumentsOpen.value = false;
+  isEquipmentMgmtOpen.value = false;
+};
 
 const handleClickOutside = (event: MouseEvent) => {
   if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
@@ -420,11 +456,31 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .nav-menu {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  margin-left: 2rem;
-  font-size: 0.9rem;
+  gap: 0.8rem;
+  margin-left: 1rem;
+  font-size: 0.85rem;
+  max-width: calc(100vw - 400px);
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  padding-bottom: 4px;
+  
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--system-separator);
+    border-radius: 4px;
+  }
   
   @media (max-width: 768px) {
     position: fixed;
@@ -432,6 +488,7 @@ onUnmounted(() => {
     left: 0;
     right: 0;
     bottom: 0;
+    max-width: none;
     background: var(--system-background);
     margin: 0;
     padding: 1rem;
@@ -441,6 +498,7 @@ onUnmounted(() => {
     transition: transform 0.3s ease;
     z-index: 999;
     overflow-y: auto;
+    overflow-x: hidden;
     
     &.open {
       transform: translateX(0);
@@ -451,8 +509,8 @@ onUnmounted(() => {
 .menu-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
   border-radius: 8px;
   cursor: pointer;
   color: var(--system-text);
@@ -490,14 +548,15 @@ onUnmounted(() => {
 
 .dropdown {
   cursor: pointer;
+  height: 100%;
 }
 
 .dropdown-trigger {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
   cursor: pointer;
-  padding: 0.5rem;
+  padding: 0.4rem;
   border-radius: 6px;
   transition: all 0.2s ease;
   
@@ -522,9 +581,8 @@ onUnmounted(() => {
 }
 
 .dropdown-menu {
-  position: absolute;
-  top: calc(100% + 0.4rem);
-  left: 0;
+  position: fixed;
+  top: 60px;
   min-width: 180px;
   padding: 0.4rem;
   border-radius: 6px;

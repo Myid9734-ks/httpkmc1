@@ -210,13 +210,23 @@ const handleSubmit = async () => {
 
     // 새 비밀번호와 현재 비밀번호가 모두 입력된 경우에만 비밀번호 변경
     if (formData.value.newPassword && formData.value.currentPassword) {
+      logger.info('[프로필 수정] 비밀번호 변경 시도', {
+        hasCurrentPassword: !!formData.value.currentPassword,
+        hasNewPassword: !!formData.value.newPassword,
+        passwordLength: formData.value.newPassword.length
+      });
+
       if (formData.value.newPassword !== formData.value.newPasswordConfirm) {
+        logger.error('[프로필 수정] 새 비밀번호 불일치');
         error.value = '새 비밀번호가 일치하지 않습니다.'
         isLoading.value = false
         return
       }
 
       if (formData.value.newPassword.length < 6) {
+        logger.error('[프로필 수정] 비밀번호 길이 부족', {
+          length: formData.value.newPassword.length
+        });
         error.value = '비밀번호는 6자 이상이어야 합니다.'
         isLoading.value = false
         return
@@ -226,10 +236,7 @@ const handleSubmit = async () => {
       updateData.currentPassword = formData.value.currentPassword
       updateData.newPassword = formData.value.newPassword
 
-      logger.info('비밀번호 변경 시도', {
-        hasCurrentPassword: true,
-        hasNewPassword: true
-      })
+      logger.info('[프로필 수정] 비밀번호 변경 데이터 준비 완료');
     }
 
     await authStore.updateProfile(updateData)

@@ -1495,6 +1495,44 @@ const isSystemAdmin = computed(() => {
     gap: 0.5rem;
     position: relative;
 
+    .check-button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 2px solid var(--mac-border-color);
+      background: var(--mac-background);
+      color: var(--mac-text);
+      min-width: 100px;
+      justify-content: center;
+
+      &:hover {
+        background: var(--mac-hover-background);
+      }
+
+      &.active {
+        &:not(.danger) {
+          background-color: rgba(34, 197, 94, 0.1);
+          border-color: #22c55e;
+          color: #22c55e;
+        }
+
+        &.danger {
+          background-color: rgba(220, 38, 38, 0.1);
+          border-color: #dc2626;
+          color: #dc2626;
+        }
+      }
+
+      .svg-inline--fa {
+        font-size: 1rem;
+      }
+    }
+
     &::after {
       content: '필수 선택';
       position: absolute;

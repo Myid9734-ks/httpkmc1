@@ -1026,89 +1026,58 @@ const handleDepartmentChange = () => {
       }
 
       .location-inputs {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-        width: 100%;
-        margin-bottom: 8px;
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
       }
     }
   }
 }
 
 .location-input-group {
-  position: relative;
   display: flex;
-  gap: 4px;
-  align-items: flex-start;
+  align-items: center;
+  gap: 0.25rem;
 
-  select.edit-input.location,
-  input.edit-input.location {
-    text-align: center;
-    padding: 6px;
-    width: 100%;
-    min-width: 60px;
-    height: 32px;
-    font-size: 13px;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 6px center;
-    padding-right: 24px;
-    background-color: #2d2d2d;
-    color: #e0e0e0;
+  .edit-input.location {
+    width: 80px;
+    background-color: var(--input-background);
+    color: var(--text-primary);
     border: 1px solid var(--border-color);
-    border-radius: 6px;
-    cursor: pointer;
-
-    option {
-      background-color: #2d2d2d;
-      color: #e0e0e0;
-      padding: 8px 12px;
-    }
+    border-radius: var(--mac-radius);
+    padding: 4px 8px;
+    font-size: 0.9rem;
 
     &:focus {
-      border-color: var(--accent-color);
+      border-color: var(--system-accent);
       outline: none;
-      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
     }
-  }
 
-  input.edit-input.location {
-    background-image: none;
-    padding-right: 6px;
+    option {
+      background-color: var(--background-primary);
+      color: var(--text-primary);
+    }
   }
 
   .custom-toggle {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-    border-radius: 4px;
+    padding: 4px;
     border: 1px solid var(--border-color);
-    background: var(--surface-variant);
-    color: var(--text-secondary);
+    border-radius: var(--mac-radius);
+    background-color: var(--background-primary);
+    color: var(--text-primary);
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    padding: 0;
-    margin-top: 6px;
-
-    i {
-      font-size: 10px;
-    }
-
+    
     &:hover {
-      background: var(--hover-bg);
-      border-color: var(--hover-border);
-      color: var(--text-primary);
+      background-color: var(--hover-background);
     }
-
+    
     &.active {
-      background: var(--accent-color);
-      border-color: var(--accent-color);
+      background-color: var(--system-accent);
       color: white;
+      border-color: var(--system-accent);
     }
   }
 }

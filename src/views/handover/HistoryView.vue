@@ -36,12 +36,12 @@
         </thead>
         <tbody>
           <tr v-for="record in filteredRecords" :key="`${record.date}_${record.shift}_${record.writer}`">
-            <td>{{ formatDate(record.date) }}</td>
-            <td>{{ record.factory }}</td>
-            <td>{{ record.department }}</td>
-            <td>{{ record.shift }}</td>
-            <td>{{ record.writer }}</td>
-            <td class="content-cell">
+            <td data-label="날짜">{{ formatDate(record.date) }}</td>
+            <td data-label="공장">{{ record.factory }}</td>
+            <td data-label="부서">{{ record.department }}</td>
+            <td data-label="교대조">{{ record.shift }}</td>
+            <td data-label="작성자">{{ record.writer }}</td>
+            <td class="content-cell" data-label="라인명">
               <table class="inner-table">
                 <tbody>
                   <tr v-for="line in record.lines.filter(line => line.handover_content || line.remarks)" :key="`${record.date}_${record.shift}_${line.line_name}`">
@@ -50,7 +50,7 @@
                 </tbody>
               </table>
             </td>
-            <td class="content-cell">
+            <td class="content-cell" data-label="인수인계 사항">
               <table class="inner-table">
                 <tbody>
                   <tr v-for="line in record.lines.filter(line => line.handover_content || line.remarks)" :key="`${record.date}_${record.shift}_${line.line_name}_content`">
@@ -59,7 +59,7 @@
                 </tbody>
               </table>
             </td>
-            <td class="content-cell">
+            <td class="content-cell" data-label="비고">
               <table class="inner-table">
                 <tbody>
                   <tr v-for="line in record.lines.filter(line => line.handover_content || line.remarks)" :key="`${record.date}_${record.shift}_${line.line_name}_remarks`">
@@ -298,5 +298,76 @@ onMounted(async () => {
 
 .general-remarks-row strong {
   color: var(--system-accent);
+}
+
+/* 반응형 테이블 스타일 */
+@media screen and (max-width: 768px) {
+  .mac-table {
+    display: block;
+    
+    thead {
+      display: none; /* 모바일에서는 헤더 숨김 */
+    }
+    
+    tbody {
+      display: block;
+      
+      tr {
+        display: block;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: var(--mac-background-secondary);
+        border-radius: var(--mac-radius);
+        
+        td {
+          display: flex;
+          padding: 0.5rem 0;
+          border: none;
+          
+          &:before {
+            content: attr(data-label);
+            font-weight: 500;
+            width: 120px;
+            min-width: 120px;
+            color: var(--mac-text-secondary);
+          }
+        }
+        
+        .content-cell {
+          flex-direction: column;
+          
+          &:before {
+            margin-bottom: 0.5rem;
+          }
+          
+          .inner-table {
+            width: 100%;
+            
+            td {
+              padding: 0.25rem 0;
+              
+              &:before {
+                display: none;
+              }
+            }
+          }
+        }
+      }
+      
+      .general-remarks-row {
+        td {
+          flex-direction: column;
+          
+          strong {
+            margin-bottom: 0.5rem;
+          }
+          
+          .inner-table {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
 }
 </style> 

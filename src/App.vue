@@ -99,8 +99,25 @@ const setupDdayCheck = () => {
   }, timeUntilMidnight)
 }
 
-// 컴포넌트 마운트 시 타이머 설정
+// 토큰 검증 주기 설정 (5분)
+const TOKEN_VALIDATION_INTERVAL = 5 * 60 * 1000
+
 onMounted(() => {
+  // 초기 토큰 검증
+  authStore.validateToken()
+
+  // 주기적으로 토큰 검증
+  const intervalId = setInterval(() => {
+    if (authStore.isAuthenticated) {
+      authStore.validateToken()
+    }
+  }, TOKEN_VALIDATION_INTERVAL)
+
+  // 컴포넌트 언마운트 시 인터벌 제거
+  onUnmounted(() => {
+    clearInterval(intervalId)
+  })
+
   setupDdayCheck()
 })
 

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { login as loginApi, updateProfile as updateProfileApi, getUsers as getUsersApi } from '@/api/auth'
+import { login as loginApi, getCurrentUser, updateProfile as updateProfileApi, getUsers as getUsersApi } from '@/api/auth'
 import type { UpdateProfileResponse, LoginCredentials } from '@/api/auth'
 import router from '@/router'
 import { logger } from '@/utils/logger'
@@ -32,9 +32,9 @@ interface UpdateProfileData {
 }
 
 export const useAuthStore = defineStore('auth', () => {
-  const token = ref(localStorage.getItem('token') || '')
+  const token = ref<string | null>(localStorage.getItem('token'))
   const user = ref<User | null>(null)
-  const isAuthenticated = ref(false)
+  const isAuthenticated = ref(!!token.value)
 
   // 관리자 여부 확인
   const isAdmin = computed(() => {
@@ -105,7 +105,7 @@ export const useAuthStore = defineStore('auth', () => {
     const username = user.value?.username;
     logger.info('로그아웃', { username });
     
-    token.value = ''
+    token.value = null
     user.value = null
     isAuthenticated.value = false
     
@@ -117,26 +117,38 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   // 토큰 검증
-  const validateAuth = async () => {
-    const savedToken = localStorage.getItem('token')
-    const savedUser = localStorage.getItem('user')
-    
-    if (!savedToken || !savedUser) {
-      logger.debug('저장된 인증 정보 없음');
-      logout()
-      return
-    }
-
+  async function validateToken() {
     try {
-      token.value = savedToken
-      user.value = JSON.parse(savedUser)
-      isAuthenticated.value = true
-      if (user.value) {
-        logger.debug('인증 상태 복원 성공', { username: user.value.username });
+      if (!token.value) {
+        isAuthenticated.value = false;
+        return false;
       }
-    } catch (error) {
-      logger.error('인증 상태 복원 실패', { error: (error as Error).message });
-      logout()
+
+      try {
+        const { user: userData } = await getCurrentUser();
+        
+        user.value = userData;
+        isAuthenticated.value = true;
+
+        return true;
+      } catch (error: any) {
+        // 토큰 만료 또는 유효하지 않은 토큰인 경우
+        if (error.response?.status === 401) {
+          logger.warn('[토큰 검증] 토큰이 만료되었거나 유효하지 않음', {
+            error: error.message
+          });
+          await logout();
+          // 사용자에게 알림
+          alert('로그인이 만료되었습니다. 다시 로그인해주세요.');
+        }
+        return false;
+      }
+    } catch (error: any) {
+      logger.error('[토큰 검증] 오류 발생', {
+        error: error.message
+      });
+      await logout();
+      return false;
     }
   }
 
@@ -182,7 +194,7 @@ export const useAuthStore = defineStore('auth', () => {
     isUser,
     login,
     logout,
-    validateAuth,
+    validateToken,
     updateProfile,
     getUsers
   }

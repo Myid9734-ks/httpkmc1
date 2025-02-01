@@ -218,25 +218,37 @@ router.put('/profile', verifyToken, async (req, res) => {
 
     // 비밀번호 변경 처리
     if (currentPassword && newPassword) {
-      console.log('[비밀번호 변경 시도]', {
+      console.log('[프로필 업데이트] 비밀번호 변경 시도', {
         userId: req.user.id,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        hasCurrentPassword: !!currentPassword,
+        hasNewPassword: !!newPassword
       });
 
       const user = await db.get('SELECT password FROM users WHERE id = ?', [req.user.id]);
+      
+      console.log('[프로필 업데이트] 현재 비밀번호 검증 시작');
       const validPassword = await bcrypt.compare(currentPassword, user.password);
 
       if (!validPassword) {
-        console.log('[프로필 업데이트 실패] 현재 비밀번호 불일치', {
+        console.log('[프로필 업데이트] 현재 비밀번호 불일치', {
           userId: req.user.id,
           timestamp: new Date().toISOString()
         });
         return res.status(401).json({ message: '현재 비밀번호가 일치하지 않습니다.' });
       }
 
+      console.log('[프로필 업데이트] 새 비밀번호 해시 생성 시작');
       const hashedPassword = await bcrypt.hash(newPassword, 10);
+      console.log('[프로필 업데이트] 새 비밀번호 해시 생성 완료');
+
       updateFields.push('password = ?');
       params.push(hashedPassword);
+
+      console.log('[프로필 업데이트] 비밀번호 변경 준비 완료', {
+        userId: req.user.id,
+        timestamp: new Date().toISOString()
+      });
     }
 
     if (updateFields.length === 0) {
